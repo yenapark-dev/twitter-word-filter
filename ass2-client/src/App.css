@@ -1,0 +1,12 @@
+.Intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Intro h1 {
+  margin: 30px;
+}
+.Intro p {
+  text-align: center;
+  width: 500px;
+}
