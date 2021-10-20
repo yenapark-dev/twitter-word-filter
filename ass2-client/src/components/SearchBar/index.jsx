@@ -5,9 +5,6 @@ import React, { useState } from 'react';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
 
-// Import compontent from antd
-import { Button } from 'antd';
-
 // Import style sheets
 import './style.css';
 
@@ -35,7 +32,7 @@ const SearchArea = (props) => {
           value={input}
           placeholder='Enter your keyword here'
         />
-        <Button type='primary'>Search All</Button>
+
         <Fab onClick={submitKeyword}>
           <AddIcon />
         </Fab>

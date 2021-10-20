@@ -17,7 +17,8 @@ form.add-keyword input {
 }
 form.add-keyword button {
   position: absolute;
-  right: 100px;
+  right: 18px;
+
   bottom: -18px;
   background: #f5ba13;
   color: #fff;
