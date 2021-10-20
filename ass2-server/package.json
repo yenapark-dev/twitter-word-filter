@@ -1,0 +1,19 @@
+{
+    "name": "ass2-server",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+      "start": "nodemon routes/index",
+      "dev": "nodemon routes/index"
+    },
+    "dependencies": {
+      "axios": "^0.23.0",
+      "debug": "~2.6.9",
+      "dotenv": "^10.0.0",
+      "express": "~4.16.1",
+      "needle": "^3.0.0"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.14"
+    }
+  }

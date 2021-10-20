@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const twitterService = require('../services/twitter');
 
-router.get('/twitter', async (req, res) => {
+router.get('/stream', async (req, res) => {
   // Should be from user query
   const rules = [{ value: 'giveaway' }, { value: 'coding' }];
 

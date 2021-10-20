@@ -58,6 +58,7 @@ const deleteRules = async (rules) => {
 
   return response.body;
 };
+
 // Stream Tweets
 const streamTweets = () => {
   const stream = needle.get(streamURL, {
