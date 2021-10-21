@@ -1,13 +1,23 @@
-form.add-keyword {
+.search-area {
+  margin: auto;
+  width: 800px;
+}
+.search-button {
+  width: auto;
+  height: 64px;
+  margin: 30px, 20px;
+  background: #fff;
+}
+.add-keyword {
   position: relative;
-  width: 480px;
-  margin: 30px auto 20px auto;
+  width: 250px;
+  margin: 30px, 20px;
   background: #fff;
   padding: 15px;
   border-radius: 7px;
   box-shadow: 0 1px 5px rgb(138, 137, 137);
 }
-form.add-keyword input {
+.add-keyword input {
   border: none;
   padding: 4px;
   outline: none;
@@ -15,10 +25,9 @@ form.add-keyword input {
   font-family: inherit;
   resize: none;
 }
-form.add-keyword button {
+.add-keyword button {
   position: absolute;
   right: 18px;
-
   bottom: -18px;
   background: #f5ba13;
   color: #fff;
@@ -29,4 +38,10 @@ form.add-keyword button {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   outline: none;
+}
+
+.keywords-area {
+  border: 2px solid #f5ba13;
+  margin-top: 20px;
+  min-height: 150px;
 }
