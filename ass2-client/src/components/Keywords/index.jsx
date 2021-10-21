@@ -7,7 +7,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 // Import style sheets
 import './style.css';
 
-const Keyword = (props) => {
+const Keywords = (props) => {
   function handleClick() {
     props.onDelete(props.id);
   }
@@ -23,4 +23,4 @@ const Keyword = (props) => {
   );
 };
 
-export default Keyword;
+export default Keywords;
