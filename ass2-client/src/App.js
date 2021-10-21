@@ -6,27 +6,11 @@ import 'antd/dist/antd.css';
 
 // Import components
 import SearchBar from './components/SearchBar';
-import Keyword from './components/Keywords';
 
 // Import style sheet
 import './App.css';
 
 function App() {
-  const [keywords, setKeywords] = useState([]);
-
-  function addNote(newWord) {
-    setKeywords((prevKeyword) => {
-      return [...prevKeyword, newWord];
-    });
-  }
-
-  function deleteNote(id) {
-    setKeywords((prevKey) => {
-      return prevKey.filter((noteItem, index) => {
-        return index !== id;
-      });
-    });
-  }
   return (
     <div className='App'>
       <div className='Intro'>
@@ -41,18 +25,7 @@ function App() {
         </p>
       </div>
 
-      <SearchBar onAdd={addNote} />
-      {keywords.map((keyword, index) => {
-        return (
-          <Keyword
-            key={index}
-            id={index}
-            name={keyword}
-            content={keyword}
-            onDelete={deleteNote}
-          />
-        );
-      })}
+      <SearchBar />
     </div>
   );
 }
