@@ -69,7 +69,7 @@ const streamTweets = () => {
 
   stream.on('data', (data) => {
     try {
-      const json = JSON.parse(data);
+      const json = JSON.parse(data) || {};
       console.log(json);
     } catch (error) {
       console.log('stream error', error);

@@ -44,7 +44,7 @@ const SearchArea = (props) => {
     });
   };
   const handleSubmit = () => {
-    fetchTwitter(JSON.stringify(keywords));
+    fetchTwitter(keywords);
   };
 
   return (

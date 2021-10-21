@@ -3,10 +3,10 @@ const express = require('express');
 const router = express.Router();
 const twitterService = require('../services/twitter');
 
-router.get('/twitter', async (req, res) => {
+router.post('/twitter', async (req, res) => {
   // Should be from user query
-  const rules = req.query[0];
-  console.log(rules);
+  const rules = req.body;
+  console.log(req.body);
 
   let currentRules;
   try {
@@ -24,7 +24,7 @@ router.get('/twitter', async (req, res) => {
 
   twitterService.streamTweets();
 
-  res.render('streaming');
+  return (res.status = 200);
 });
 
 module.exports = router;
