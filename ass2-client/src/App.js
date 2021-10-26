@@ -9,8 +9,15 @@ import SearchBar from './components/SearchBar';
 
 // Import style sheet
 import './App.css';
+import TwitteGroup from './components/TwitteGroup.js/index.js';
 
 function App() {
+  const [twiteData, setTwiteData] = useState({});
+
+  const handdleSearch = async (data, keywords) => {
+    setTwiteData(data);
+  };
+
   return (
     <div className='App'>
       <div className='Intro'>
@@ -25,7 +32,12 @@ function App() {
         </p>
       </div>
 
-      <SearchBar />
+      <SearchBar onSearch={handdleSearch} />
+
+      {Object.keys(twiteData).map((index) => {
+        const base = twiteData[index];
+        return <TwitteGroup data={base} key={index} />;
+      })}
     </div>
   );
 }

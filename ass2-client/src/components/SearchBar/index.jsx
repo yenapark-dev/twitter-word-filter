@@ -38,8 +38,14 @@ const SearchArea = (props) => {
       });
     });
   };
-  const handleSubmit = () => {
-    fetchTwitter(keywords);
+  const handleSubmit = async () => {
+    try {
+      const res = await fetchTwitter(keywords);
+      const { data } = res || {};
+      props.onSearch(data, keywords);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
