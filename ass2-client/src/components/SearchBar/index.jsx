@@ -15,24 +15,19 @@ import { fetchTwitter } from '../../services/api';
 import './style.css';
 
 const SearchArea = (props) => {
-  const [input, setInput] = useState({ value: '' });
+  const [input, setInput] = useState('');
   const [keywords, setKeywords] = useState([]);
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setInput((prevValue) => {
-      return {
-        ...prevValue,
-        [name]: value,
-      };
-    });
+    const { value } = event.target;
+    setInput(value);
   };
 
   const submitKeyword = (event) => {
     setKeywords((prevKeyword) => {
       return [...prevKeyword, input];
     });
-    setInput({ value: '' });
+    setInput('');
     event.preventDefault();
   };
 
@@ -54,7 +49,6 @@ const SearchArea = (props) => {
         <Col span={8}>
           <Input
             className='add-keyword'
-            name='value'
             onChange={handleChange}
             onPressEnter={submitKeyword}
             suffix={
@@ -65,7 +59,7 @@ const SearchArea = (props) => {
             allowClear
             maxLength='512'
             placeholder='Enter your query here'
-            value={input.value}
+            value={input}
           />
         </Col>
         <Col span={8} />
@@ -95,8 +89,8 @@ const SearchArea = (props) => {
             <Keywords
               key={index}
               id={index}
-              name={keyword.value}
-              content={keyword.value}
+              name={keyword}
+              content={keyword}
               onDelete={deleteQuery}
             />
           );

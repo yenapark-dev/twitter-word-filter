@@ -5,26 +5,19 @@ const twitterService = require('../services/twitter');
 
 router.post('/twitter', async (req, res) => {
   // Should be from user query
-  const rules = req.body;
-  console.log(req.body);
-
-  let currentRules;
+  const keys = req.body;
+  console.log(keys);
+  let twitterRes;
   try {
-    // Get all stream rules
-    currentRules = await twitterService.getRules();
-    // Delete all stream rules
-    await twitterService.deleteRules(currentRules);
-    // Set rules based on array above
-    await twitterService.setRules(rules);
-    currentRules = await twitterService.getRules();
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
+    twitterRes = await Promise.all(
+      keys.map(async (query) => {
+        const res = await twitterService.getTweets(query);
+        return res;
+      })
+    );
+  } catch (error) {}
 
-  twitterService.streamTweets();
-
-  return (res.status = 200);
+  res.send(twitterRes);
 });
 
 module.exports = router;

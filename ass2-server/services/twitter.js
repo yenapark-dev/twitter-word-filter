@@ -1,87 +1,56 @@
-// Import librabries
-const needle = require('needle');
+const axios = require('axios');
+
+const baseURL = 'https://api.twitter.com/1.1';
 
 // Get Twiiter bearer token
 const TOKEN = process.env.TWITTER_BEARER_TOKEN;
 
-// Endpoint URL
-const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
-const streamURL =
-  'https://api.twitter.com/2/tweets/search/stream?tweet.fields=public_metrics&expansions=author_id';
-
-// Set stream rules
-const setRules = async (rules) => {
-  const data = {
-    add: rules,
-  };
-  const response = await needle('post', rulesURL, data, {
-    headers: {
-      'content-type': 'application/json',
-      Authorization: `Bearer ${TOKEN}`,
-    },
+const getTweets = (twitterQuery) => {
+  const twitterURL = `${baseURL}/search/tweets.json?q=${twitterQuery}&count=5&lang=en`;
+  return new Promise((resolve, reject) => {
+    axios
+      .get(twitterURL, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      })
+      .then(function (rsp) {
+        tweetData = rsp.data.statuses;
+        const finalData = tweetData.map((tweet) => {
+          const {
+            text,
+            retweet_count: retweet,
+            favorite_count: favorite,
+          } = tweet || {};
+          const values = {
+            keyword: twitterQuery,
+            text,
+            retweet,
+            favorite,
+          };
+          return values;
+        });
+        resolve(finalData);
+      })
+      .catch(function (err) {
+        reject(err);
+      });
   });
-
-  return response.body;
 };
-
-// Get stream rules
-const getRules = async () => {
-  const response = await needle('get', rulesURL, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-  console.log(response.body);
-  return response.body;
-};
-
-// Delete stream rules
-const deleteRules = async (rules) => {
-  if (!Array.isArray(rules.data)) {
-    return null;
-  }
-
-  const ids = rules.data.map((rule) => rule.id);
-
-  const data = {
-    delete: {
-      ids: ids,
-    },
-  };
-
-  const response = await needle('post', rulesURL, data, {
-    headers: {
-      'content-type': 'application/json',
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-
-  return response.body;
-};
-
-// Stream Tweets
-const streamTweets = () => {
-  const stream = needle.get(streamURL, {
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-    },
-  });
-
-  stream.on('data', (data) => {
-    try {
-      const json = JSON.parse(data) || {};
-      console.log(json);
-    } catch (error) {
-      console.log('stream error', error);
-    }
-  });
-
-  return stream;
-};
+// const test = async () => {
+//   console.log('inside');
+//   keys = ['apple', 'watch', 'fun', 'night'];
+//   try {
+//     keys.map(async (tag) => {
+//       const res = await getTweets(tag);
+//       console.log(tag, res);
+//       return res;
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 module.exports = {
-  setRules,
-  deleteRules,
-  getRules,
-  streamTweets,
+  getTweets,
 };
