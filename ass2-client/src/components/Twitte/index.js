@@ -1,5 +1,5 @@
 // Import ant design  components
-import { Row, Col, Tag } from 'antd';
+import { Row, Col } from 'antd';
 
 // Import style sheets
 import './style.css';

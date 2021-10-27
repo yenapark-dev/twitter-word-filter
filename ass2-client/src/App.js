@@ -13,9 +13,11 @@ import TwitteGroup from './components/TwitteGroup.js/index.js';
 
 function App() {
   const [twiteData, setTwiteData] = useState({});
+  const [keywords, setKeywords] = useState();
 
   const handdleSearch = async (data, keywords) => {
     setTwiteData(data);
+    setKeywords(keywords);
   };
 
   return (

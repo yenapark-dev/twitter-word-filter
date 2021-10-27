@@ -16,7 +16,6 @@ router.post('/twitter', async (req, res) => {
       })
     );
   } catch (error) {}
-
   res.send(twitterRes);
 });
 
