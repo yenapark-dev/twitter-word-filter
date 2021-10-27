@@ -3,7 +3,7 @@ const TfIdf = natural.TfIdf;
 const tfidf = new TfIdf();
 const fs = require('fs');
 const NUM_TAGS = 5;
-const { getRandomText } = require('../services/ramdomText');
+const { getRandomText } = require('./randomText');
 
 const preprocess = async () => {
   try {

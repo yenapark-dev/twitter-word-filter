@@ -6,7 +6,7 @@ const baseURL = 'https://api.twitter.com/1.1';
 const TOKEN = process.env.TWITTER_BEARER_TOKEN;
 
 const getTweets = (twitterQuery) => {
-  const twitterURL = `${baseURL}/search/tweets.json?q=${twitterQuery}&count=100&lang=en`;
+  const twitterURL = `${baseURL}/search/tweets.json?q=${twitterQuery}&count=5&lang=en`;
   return new Promise((resolve, reject) => {
     axios
       .get(twitterURL, {
