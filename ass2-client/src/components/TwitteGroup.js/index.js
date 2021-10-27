@@ -21,7 +21,7 @@ const TwitteGroup = (props) => {
   return (
     <div>
       <Card
-        title={props.data[0].keyword}
+        title={props.data[1].keyword}
         bordered={false}
         style={{ width: '35%' }}
       >

@@ -3,19 +3,10 @@ require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const path = require('path');
-const redis = require('redis');
 
 const indexRouter = require('./routes/index');
 
 const app = express();
-
-// // create and connect redis client to local instance. =>>>> not to local, change to ELASTIC
-// const redisClient = redis.createClient();
-
-// // Print redis errors to the console
-// redisClient.on('error', (err) => {
-//   console.log('Error ' + err);
-// });
 
 // Configure CORS settings
 const WHITELISTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8081'];
