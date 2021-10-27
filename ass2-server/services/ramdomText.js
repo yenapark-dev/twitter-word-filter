@@ -13,7 +13,6 @@ const getRandomText = async () => {
   return result;
 };
 
-// getRandomText();
 module.exports = {
   getRandomText,
 };

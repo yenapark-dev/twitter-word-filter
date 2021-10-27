@@ -9,12 +9,11 @@ const nlp = require('../services/nlp');
 router.post('/twitter', async (req, res) => {
   // Should be from user query
   const userInput = req.body[0];
-  console.log(userInput);
+
   let twitterRes;
   try {
     const corpus = await nlp.preprocess();
     const tags = nlp.getTags(userInput, corpus);
-    console.log(tags);
     twitterRes = await Promise.all(
       tags.map(async (query) => {
         const { term } = query;
