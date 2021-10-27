@@ -37,19 +37,6 @@ const getTweets = (twitterQuery) => {
       });
   });
 };
-// const test = async () => {
-//   console.log('inside');
-//   keys = ['apple', 'watch', 'fun', 'night'];
-//   try {
-//     keys.map(async (tag) => {
-//       const res = await getTweets(tag);
-//       console.log(tag, res);
-//       return res;
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
 
 module.exports = {
   getTweets,

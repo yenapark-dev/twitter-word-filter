@@ -63,7 +63,6 @@ const SearchArea = (props) => {
               />
             }
             allowClear
-            maxLength='512'
             placeholder='Enter your query here'
             value={input}
           />
