@@ -16,6 +16,7 @@ function App() {
   const [keywords, setKeywords] = useState();
 
   const handdleSearch = async (data, keywords) => {
+    console.log(data);
     setTwiteData(data);
     setKeywords(keywords);
   };
