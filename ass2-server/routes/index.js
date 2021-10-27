@@ -10,7 +10,9 @@ const util = require('util');
 const { restart } = require('nodemon');
 
 // This section will change for Cloud Services
-const redisClient = redis.createClient();
+const redisClient = redis.createClient(6379, 'elastichache endpoint string', {
+  no_ready_check: true,
+});
 // Print redis errors to the console
 redisClient.on('error', (err) => {
   console.log('Error ' + err);
