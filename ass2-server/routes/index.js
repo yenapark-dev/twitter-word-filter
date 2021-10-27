@@ -10,9 +10,11 @@ const util = require('util');
 const { restart } = require('nodemon');
 
 // This section will change for Cloud Services
-const redisClient = redis.createClient(6379, 'elastichache endpoint string', {
-  no_ready_check: true,
-});
+const redisClient = redis.createClient();
+// const redisClient = redis.createClient(6379, 'elastichache endpoint string', {
+//   no_ready_check: true,
+// });
+
 // Print redis errors to the console
 redisClient.on('error', (err) => {
   console.log('Error ' + err);
@@ -57,7 +59,11 @@ router.post('/twitter', async (req, res) => {
 
       // Check Redis cache first
       const redisResult = await redisPromisified(redisKey);
+
       if (redisResult) {
+        // fetch it from Redis cache
+        const resultJSON = await twitterService.getTweets(term);
+
         return JSON.parse(redisResult);
       } else {
         try {
@@ -67,12 +73,13 @@ router.post('/twitter', async (req, res) => {
           // Store it in Redis cache
           redisClient.setex(
             redisKey,
-            3600,
+            60,
             JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
           );
+
           return JSON.parse(result.Body);
         } catch (error) {
-          // fetch from Twitter API and store in S3
+          // fetch from Twitter API
           const resultJSON = await twitterService.getTweets(term);
 
           // Store it in S3
@@ -94,7 +101,7 @@ router.post('/twitter', async (req, res) => {
           // Store it in Redis cache
           redisClient.setex(
             redisKey,
-            3600,
+            60,
             JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
           );
           return [{ source: 'Twitter API' }, ...resultJSON];
