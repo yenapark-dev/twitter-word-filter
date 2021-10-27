@@ -2,8 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const twitterService = require('../services/twitter');
-const googleTrends = require('../services/google');
-const randomText = require('../services/ramdomText');
+const { googleTrends } = require('../services/google');
 const nlp = require('../services/nlp');
 
 router.post('/twitter', async (req, res) => {
@@ -18,6 +17,8 @@ router.post('/twitter', async (req, res) => {
       tags.map(async (query) => {
         const { term } = query;
         const res = await twitterService.getTweets(term);
+        const trends = await googleTrends(term);
+        console.log(trends);
         return res;
       })
     );
