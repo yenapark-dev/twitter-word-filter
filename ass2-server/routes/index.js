@@ -53,15 +53,21 @@ router.post('/twitter', async (req, res) => {
         .promisify(redisClient.get)
         .bind(redisClient);
 
-      try {
-        // Check Redis cache first
-        const redisResult = await redisPromisified(redisKey);
-        console.log(JSON.parse(redisResult), '-------------------');
+      // Check Redis cache first
+      const redisResult = await redisPromisified(redisKey);
+      if (redisResult) {
         return JSON.parse(redisResult);
-      } catch (err) {
+      } else {
         try {
           // Check S3
           const result = await S3promisified(params);
+
+          // Store it in Redis cache
+          redisClient.setex(
+            redisKey,
+            3600,
+            JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
+          );
           return JSON.parse(result.Body);
         } catch (error) {
           // fetch from Twitter API and store in S3
