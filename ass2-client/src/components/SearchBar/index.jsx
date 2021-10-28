@@ -16,7 +16,7 @@ import './style.css';
 const { TextArea } = Input;
 const SearchArea = (props) => {
   const [form] = Form.useForm();
-  const [twiteData, setTwiteData] = useState({});
+  const [twiteData, setTwiteData] = useState([]);
   const [loading, setLoading] = useState(false);
   const layout = {
     labelCol: { span: 24 },
@@ -69,7 +69,6 @@ const SearchArea = (props) => {
               htmlType='submit'
               block
               icon={<SearchOutlined />}
-              onClick={handleSubmit}
               size='large'
               type='text'
               style={{
@@ -89,10 +88,8 @@ const SearchArea = (props) => {
         {loading ? (
           <Spin />
         ) : (
-          Object.keys(twiteData).map((index) => {
-            const base = twiteData[index];
-            return <TwitteGroup data={base} key={index} />;
-          })
+          twiteData.length > 0 &&
+          twiteData.map((twit, idx) => <TwitteGroup data={twit} idx={idx} />)
         )}
       </div>
     </div>

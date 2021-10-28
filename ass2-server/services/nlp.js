@@ -1,6 +1,5 @@
 const natural = require('natural');
 const TfIdf = natural.TfIdf;
-const tfidf = new TfIdf();
 const fs = require('fs');
 const NUM_TAGS = 5;
 const { getRandomText } = require('./randomText');
@@ -18,20 +17,24 @@ const preprocess = async () => {
 
 // input from user
 const getTags = (userInput, corpus) => {
+  const tfidf = new TfIdf();
   tfidf.addDocument(formatInput(userInput));
-  corpus.map((tweet) => {
-    if (tweet !== undefined) {
-      tfidf.addDocument(tweet);
+  corpus.map((praragraph) => {
+    if (praragraph !== undefined) {
+      tfidf.addDocument(praragraph);
     }
   });
   let analysis = [];
   let tags = [];
+
   tfidf.listTerms(0).forEach(function (item) {
+    console.log(item, 'item');
     analysis.push(item);
   });
   for (let i = 0; i < NUM_TAGS; i++) {
     tags[i] = analysis[i];
   }
+  console.log(tags);
 
   return tags;
 };
