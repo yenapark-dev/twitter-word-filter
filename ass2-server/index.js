@@ -17,7 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', indexRouter);
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/*', (_, res) =>
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+);
 
 const port = process.env.PORT || 8081;
 
