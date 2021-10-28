@@ -28,7 +28,6 @@ const getTags = (userInput, corpus) => {
   let tags = [];
 
   tfidf.listTerms(0).forEach(function (item) {
-    console.log(item, 'item');
     analysis.push(item);
   });
   for (let i = 0; i < NUM_TAGS; i++) {

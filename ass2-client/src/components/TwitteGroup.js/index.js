@@ -3,15 +3,17 @@ import React from 'react';
 import { List, Skeleton, Divider, Card } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+// Import style sheets
+import './styles.css';
 const TwitteGroup = (props) => {
   const { data: tweetData, idx } = props;
 
   return (
-    <div>
+    <div className='twitte-card'>
       <Card
-        title={idx + 1 + ' ' + props.data[1].keyword}
+        title={idx + 1 + ': ' + props.data[1].keyword}
         bordered={false}
-        style={{ width: '80%' }}
+        style={{ width: '100%', backgroundColor: 'rgba(245,186,19, 0.20)' }}
       >
         <div
           id='scrollableDiv'
@@ -20,6 +22,7 @@ const TwitteGroup = (props) => {
             overflow: 'auto',
             padding: '0 16px',
             border: '1px solid rgba(140, 140, 140, 0.35)',
+            backgroundColor: 'white',
           }}
         >
           <InfiniteScroll
@@ -32,6 +35,16 @@ const TwitteGroup = (props) => {
           >
             <List
               dataSource={tweetData}
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 3,
+                lg: 3,
+                xl: 3,
+                xxl: 5,
+              }}
+              style={{}}
               renderItem={(item, index) => (
                 <List.Item key={index}>
                   {item.text ? (
