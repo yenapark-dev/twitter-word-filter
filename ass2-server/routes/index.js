@@ -26,7 +26,8 @@ const bucketName = 'yenapark-tweet-store';
 
 router.post('/twitter', async (req, res) => {
   // Should be from user query
-  const userInput = req.body[0];
+  const { data: userInput } = req.body || {};
+
   let tags;
 
   try {

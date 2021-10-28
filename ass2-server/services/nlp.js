@@ -18,7 +18,6 @@ const preprocess = async () => {
 
 // input from user
 const getTags = (userInput, corpus) => {
-  console.log(userInput);
   tfidf.addDocument(formatInput(userInput));
   corpus.map((tweet) => {
     if (tweet !== undefined) {

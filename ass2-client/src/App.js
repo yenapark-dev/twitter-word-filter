@@ -1,5 +1,5 @@
 // Import libray
-import React, { useState } from 'react';
+import React from 'react';
 
 // Import ant design style sheet
 import 'antd/dist/antd.css';
@@ -9,18 +9,8 @@ import SearchBar from './components/SearchBar';
 
 // Import style sheet
 import './App.css';
-import TwitteGroup from './components/TwitteGroup.js/index.js';
 
 function App() {
-  const [twiteData, setTwiteData] = useState({});
-  const [keywords, setKeywords] = useState();
-
-  const handdleSearch = async (data, keywords) => {
-    console.log(data);
-    setTwiteData(data);
-    setKeywords(keywords);
-  };
-
   return (
     <div className='App'>
       <div className='Intro'>
@@ -34,13 +24,7 @@ function App() {
           by the user.
         </p>
       </div>
-
-      <SearchBar onSearch={handdleSearch} />
-
-      {Object.keys(twiteData).map((index) => {
-        const base = twiteData[index];
-        return <TwitteGroup data={base} key={index} />;
-      })}
+      <SearchBar />
     </div>
   );
 }
