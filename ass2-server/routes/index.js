@@ -33,8 +33,10 @@ router.post('/twitter', async (req, res) => {
   try {
     // Get corpus - large array of random strings
     const corpus = await nlp.preprocess();
+    
     // Get tags
     tags = nlp.getTags(userInput, corpus);
+
   } catch (error) {
     // return res.status(error)
     console.log(error);
