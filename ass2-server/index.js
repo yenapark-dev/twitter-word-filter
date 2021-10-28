@@ -9,7 +9,7 @@ const indexRouter = require('./routes/index');
 const app = express();
 
 // Configure CORS settings
-const WHITELISTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8080'];
+const WHITELISTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8081'];
 app.use(cors({ origin: WHITELISTED_ORIGINS, credentials: true }));
 
 // Add body parser middleware
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', indexRouter);
 app.use(express.static(path.join(__dirname, '../client/build')));
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8081;
 
 app.listen(port, () => {
   console.log('server is up on port', port);

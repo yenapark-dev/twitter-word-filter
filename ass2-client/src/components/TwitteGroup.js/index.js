@@ -1,29 +1,17 @@
 // Import ant design  components
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { List, Skeleton, Divider, Card } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 const TwitteGroup = (props) => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
-    setLoading(true);
-    setData(props.data);
-    setLoading(false);
-  };
-  useEffect(() => {
-    loadMoreData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { data: tweetData, idx } = props;
+
   return (
     <div>
       <Card
-        title={props.data[0].keyword}
+        title={idx + 1 + ' ' + props.data[1].keyword}
         bordered={false}
-        style={{ width: '35%' }}
+        style={{ width: '80%' }}
       >
         <div
           id='scrollableDiv'
@@ -35,21 +23,23 @@ const TwitteGroup = (props) => {
           }}
         >
           <InfiniteScroll
-            dataLength={data.length}
-            next={loadMoreData}
-            hasMore={data.length < 30}
+            dataLength={tweetData.length}
+            next={tweetData}
+            hasMore={tweetData.length < 30}
             loader={<Skeleton paragraph={{ rows: 1 }} active />}
             endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
             scrollableTarget='scrollableDiv'
           >
             <List
-              dataSource={data}
-              renderItem={(item) => (
-                <List.Item key={item.keywords}>
-                  <List.Item.Meta
-                    title={item.text}
-                    description={`${item.retweet} Retweet ${item.favorite} Like`}
-                  />
+              dataSource={tweetData}
+              renderItem={(item, index) => (
+                <List.Item key={index}>
+                  {item.text ? (
+                    <List.Item.Meta
+                      title={item.text}
+                      description={`${item.retweet} Retweet ${item.favorite} Like`}
+                    />
+                  ) : null}
                 </List.Item>
               )}
             />

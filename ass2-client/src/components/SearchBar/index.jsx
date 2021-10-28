@@ -2,105 +2,96 @@
 import React, { useState } from 'react';
 
 // Import ant design  components
-import { Row, Col, Button, Input } from 'antd';
-import { SearchOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { Button, Input, message, Spin, Form } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 // Import componets
-import Keywords from '../Keywords';
-
+import TwitteGroup from '../TwitteGroup.js';
 // Import Services
 import { fetchTwitter } from '../../services/api';
 
 // Import style sheets
 import './style.css';
 
+const { TextArea } = Input;
 const SearchArea = (props) => {
-  const [input, setInput] = useState('');
-  const [keywords, setKeywords] = useState([]);
-
-  const handleChange = (event) => {
-    const { value } = event.target;
-    setInput(value);
+  const [form] = Form.useForm();
+  const [twiteData, setTwiteData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const layout = {
+    labelCol: { span: 24 },
+    wrapperCol: { span: 24 },
   };
 
-  const submitKeyword = (event) => {
-    setKeywords((prevKeyword) => {
-      return [...prevKeyword, input];
-    });
-    setInput('');
-    event.preventDefault();
-  };
-
-  const deleteQuery = (id) => {
-    setKeywords((prevQuery) => {
-      return prevQuery.filter((query, index) => {
-        return index !== id;
-      });
-    });
-  };
-  const handleSubmit = async () => {
+  const handleSubmit = async (values) => {
+    const { text } = values;
     try {
-      const res = await fetchTwitter(keywords);
+      setLoading(true);
+
+      const res = await fetchTwitter({ data: text });
       const { data } = res || {};
-      props.onSearch(data, keywords);
+      setTwiteData(data);
     } catch (error) {
-      console.log(error);
+      message.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className='search-area'>
-      <Row className='action'>
-        {/* Add keyword input */}
-        <Col span={8}>
-          <Input
-            className='add-keyword'
-            onChange={handleChange}
-            onPressEnter={submitKeyword}
-            suffix={
-              <PlusCircleOutlined
-                style={{ color: ' #f5ba13', fontSize: '2em' }}
-              />
-            }
-            allowClear
-            placeholder='Enter your query here'
-            value={input}
-          />
-        </Col>
-        <Col span={8} />
-        {/* Search button */}
-        <Col span={8}>
-          <Button
-            block
-            icon={<SearchOutlined />}
-            onClick={handleSubmit}
-            size='large'
-            type='text'
-            style={{
-              height: '60px',
-              borderRadius: '7px',
-              boxShadow: '0 1px 5px rgb(138, 137, 137) ',
-              backgroundColor: ' #f5ba13',
-              fontSize: '1.2em',
-            }}
+    <div>
+      <div className='search-area'>
+        <Form
+          form={form}
+          name='search-form'
+          onFinish={handleSubmit}
+          {...layout}
+          layout='vertical'
+          size='large'
+        >
+          <Form.Item
+            name='text'
+            label='Text'
+            rules={[{ required: true }]}
+            required
           >
-            Search
-          </Button>
-        </Col>
-      </Row>
-      <Row className='keywords-area'>
-        {keywords.map((keyword, index) => {
-          return (
-            <Keywords
-              key={index}
-              id={index}
-              name={keyword}
-              content={keyword}
-              onDelete={deleteQuery}
+            <TextArea
+              showCount
+              autoSize={{ minRows: 3, maxRows: 6 }}
+              allowClear
+              placeholder='Enter the text you want to search here'
+              bordered='false'
+              style={{ border: ' 2px solid #f5ba13' }}
             />
-          );
-        })}
-      </Row>
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 18, span: 6 }}>
+            <Button
+              htmlType='submit'
+              block
+              icon={<SearchOutlined />}
+              size='large'
+              type='text'
+              style={{
+                height: '60px',
+                borderRadius: '7px',
+                boxShadow: '0 1px 5px rgb(138, 137, 137) ',
+                backgroundColor: ' #f5ba13',
+                fontSize: '1.2em',
+              }}
+            >
+              Search
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
+      <div>
+        {loading ? (
+          <Spin />
+        ) : (
+          twiteData.length > 0 &&
+          twiteData.map((twit, idx) => <TwitteGroup data={twit} idx={idx} />)
+        )}
+      </div>
     </div>
   );
 };

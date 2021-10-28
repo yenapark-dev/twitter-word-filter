@@ -1,9 +1,8 @@
 const natural = require('natural');
 const TfIdf = natural.TfIdf;
-const tfidf = new TfIdf();
 const fs = require('fs');
 const NUM_TAGS = 5;
-const { getRandomText } = require('../services/ramdomText');
+const { getRandomText } = require('./randomText');
 
 const preprocess = async () => {
   try {
@@ -18,21 +17,24 @@ const preprocess = async () => {
 
 // input from user
 const getTags = (userInput, corpus) => {
-  console.log(userInput);
+  const tfidf = new TfIdf();
   tfidf.addDocument(formatInput(userInput));
-  corpus.map((tweet) => {
-    if (tweet !== undefined) {
-      tfidf.addDocument(tweet);
+  corpus.map((praragraph) => {
+    if (praragraph !== undefined) {
+      tfidf.addDocument(praragraph);
     }
   });
   let analysis = [];
   let tags = [];
+
   tfidf.listTerms(0).forEach(function (item) {
+    console.log(item, 'item');
     analysis.push(item);
   });
   for (let i = 0; i < NUM_TAGS; i++) {
     tags[i] = analysis[i];
   }
+  console.log(tags);
 
   return tags;
 };
@@ -173,6 +175,7 @@ const commonWords = [
   'while',
   'who',
   'whom',
+  'will',
   'with',
   'would',
   'why',
