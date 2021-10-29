@@ -33,8 +33,6 @@ const getTags = (userInput, corpus) => {
   for (let i = 0; i < NUM_TAGS; i++) {
     tags[i] = analysis[i];
   }
-  console.log(tags);
-
   return tags;
 };
 

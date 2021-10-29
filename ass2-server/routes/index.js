@@ -9,29 +9,30 @@ const redis = require('redis');
 const util = require('util');
 const { restart } = require('nodemon');
 
+// Initialise AWS S3
+const AWS = require('aws-sdk');
+
 // This section will change for Cloud Services
-const redisClient = redis.createClient();
-// const redisClient = redis.createClient(
-//   6379,
-//   'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com',
-//   {
-//     no_ready_check: true,
-//   }
-// );
+// const redisClient = redis.createClient();
+const redisClient = redis.createClient(
+  6379,
+  'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com',
+  {
+    no_ready_check: true,
+  }
+);
 
 // Print redis errors to the console
 redisClient.on('error', (err) => {
   console.log('Error ' + err);
 });
 
-// Initialise AWS S3
-var AWS = require('aws-sdk');
 const bucketName = 'yenapark-tweet-store';
 
 router.post('/twitter', async (req, res) => {
   // Should be from user query
   const { data: userInput } = req.body || {};
-
+  console.log('received request');
   let tags;
 
   try {
@@ -41,8 +42,6 @@ router.post('/twitter', async (req, res) => {
     // Get tags
     tags = nlp.getTags(userInput, corpus);
   } catch (error) {
-    // return res.status(error)
-    console.log(error);
     return res.status(400).send('Error fetching corpous and tags');
   }
 
@@ -53,7 +52,7 @@ router.post('/twitter', async (req, res) => {
       const redisKey = `tweet:${term}`;
       const params = { Bucket: bucketName, Key: s3Key };
 
-      const serviceObject = new AWS.S3();
+      const serviceObject = new AWS.S3({ apiVersion: '2006-03-01' });
 
       const S3promisified = util
         .promisify(serviceObject.getObject)
@@ -71,11 +70,11 @@ router.post('/twitter', async (req, res) => {
         return resultJSON;
       } else {
         // Check S3
-        const result = await S3promisified(params);
-
-        if (result) {
+        try {
+          console.log(params, 'param');
+          const result = await S3promisified(params);
           const s3Result = JSON.parse(result.Body);
-          console.log('s3 --------------------');
+
           // Store it in Redis cache
           redisClient.setex(
             redisKey,
@@ -83,9 +82,8 @@ router.post('/twitter', async (req, res) => {
             JSON.stringify([{ source: 'Redis Cache' }, ...s3Result])
           );
           return JSON.parse(result.Body);
-        } else {
+        } catch (err) {
           try {
-            console.log('twitter api --------------------');
             // fetch from Twitter API
             const resultJSON = await twitterService.getTweets(term);
 
@@ -116,9 +114,7 @@ router.post('/twitter', async (req, res) => {
             });
 
             return [{ source: 'Twitter API' }, ...resultJSON];
-          } catch (error) {
-            console.log(error, 'final errir----------------------');
-          }
+          } catch (error) {}
         }
       }
     })
