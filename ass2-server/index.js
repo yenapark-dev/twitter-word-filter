@@ -23,7 +23,7 @@ app.get('/*', (_, res) =>
   res.sendFile(path.join(__dirname, '../ass2-client/build', 'index.html'))
 );
 
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log('server is up on port', port);

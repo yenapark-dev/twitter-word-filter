@@ -10,10 +10,14 @@ const util = require('util');
 const { restart } = require('nodemon');
 
 // This section will change for Cloud Services
-// const redisClient = redis.createClient();
-const redisClient = redis.createClient(6379, 'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com', {
-  no_ready_check: true,
-});
+const redisClient = redis.createClient();
+// const redisClient = redis.createClient(
+//   6379,
+//   'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com',
+//   {
+//     no_ready_check: true,
+//   }
+// );
 
 // Print redis errors to the console
 redisClient.on('error', (err) => {
@@ -33,10 +37,9 @@ router.post('/twitter', async (req, res) => {
   try {
     // Get corpus - large array of random strings
     const corpus = await nlp.preprocess();
-    
+
     // Get tags
     tags = nlp.getTags(userInput, corpus);
-
   } catch (error) {
     // return res.status(error)
     console.log(error);
@@ -67,46 +70,55 @@ router.post('/twitter', async (req, res) => {
         const resultJSON = JSON.parse(redisResult);
         return resultJSON;
       } else {
-        try {
-          // Check S3
-          const result = await S3promisified(params);
+        // Check S3
+        const result = await S3promisified(params);
 
+        if (result) {
+          const s3Result = JSON.parse(result.Body);
+          console.log('s3 --------------------');
           // Store it in Redis cache
-          const resultJSON = await twitterService.getTweets(term);
           redisClient.setex(
             redisKey,
             300,
-            JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
+            JSON.stringify([{ source: 'Redis Cache' }, ...s3Result])
           );
           return JSON.parse(result.Body);
-        } catch (error) {
-          // fetch from Twitter API
-          const resultJSON = await twitterService.getTweets(term);
+        } else {
+          try {
+            console.log('twitter api --------------------');
+            // fetch from Twitter API
+            const resultJSON = await twitterService.getTweets(term);
 
-          // Store it in Redis cache
-          redisClient.setex(
-            redisKey,
-            300,
-            JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
-          );
-
-          // Store it in S3
-          const body = JSON.stringify([{ source: 'S3 bucket' }, ...resultJSON]);
-          const objectParams = {
-            Bucket: bucketName,
-            Key: s3Key,
-            Body: body,
-          };
-          const uploadPromise = new AWS.S3({ apiVersion: '2006-03-01' })
-            .putObject(objectParams)
-            .promise();
-          uploadPromise.then(function () {
-            console.log(
-              'Successfully uploaded data to ' + bucketName + '/' + s3Key
+            // Store it in Redis cache
+            redisClient.setex(
+              redisKey,
+              300,
+              JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
             );
-          });
 
-          return [{ source: 'Twitter API' }, ...resultJSON];
+            // Store it in S3
+            const body = JSON.stringify([
+              { source: 'S3 bucket' },
+              ...resultJSON,
+            ]);
+            const objectParams = {
+              Bucket: bucketName,
+              Key: s3Key,
+              Body: body,
+            };
+            const uploadPromise = new AWS.S3({ apiVersion: '2006-03-01' })
+              .putObject(objectParams)
+              .promise();
+            uploadPromise.then(function () {
+              console.log(
+                'Successfully uploaded data to ' + bucketName + '/' + s3Key
+              );
+            });
+
+            return [{ source: 'Twitter API' }, ...resultJSON];
+          } catch (error) {
+            console.log(error, 'final errir----------------------');
+          }
         }
       }
     })
