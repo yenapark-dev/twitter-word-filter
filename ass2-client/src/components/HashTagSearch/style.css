@@ -1,0 +1,10 @@
+.search-area {
+  margin: auto;
+  width: 800px;
+}
+
+.keywords-area {
+  border: 2px solid #f5ba13;
+  margin-top: 20px;
+  min-height: 150px;
+}
