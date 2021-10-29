@@ -10,14 +10,14 @@ const util = require('util');
 const { restart } = require('nodemon');
 
 // This section will change for Cloud Services
-const redisClient = redis.createClient();
-// const redisClient = redis.createClient(
-//   6379,
-//   'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com',
-//   {
-//     no_ready_check: true,
-//   }
-// );
+// const redisClient = redis.createClient();
+const redisClient = redis.createClient(
+  6379,
+  'yenapark-assignment2-redis.km2jzi.0001.apse2.cache.amazonaws.com',
+  {
+    no_ready_check: true,
+  }
+);
 
 // Print redis errors to the console
 redisClient.on('error', (err) => {
