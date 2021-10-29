@@ -24,11 +24,10 @@ function App() {
         <h1>Twitter Filter Engine</h1>
         <p>
           Cloud-based query processor based on Twitter messages. It will allow
-          user to enter multiple queries based on “hashtags”. With the data
-          collected, the app will utilise NLP to do sentiment analysis to find
-          the most related keywords related to the queries and visualise it with
-          word cloud. The query will remain active until it is manually revoked
-          by the user.
+          user to enter multiple queries or just a paragraph. With the data
+          collected, the app will utilise NLP to do TfIdf analysis to find the
+          most related keywords related to the queries and display all the tweet
+          related to that keyword.
         </p>
       </div>
       <div>
