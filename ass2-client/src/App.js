@@ -4,16 +4,17 @@ import React, { useState } from 'react';
 // Import ant design style sheet
 import 'antd/dist/antd.css';
 import { Radio } from 'antd';
+
 // Import components
 import HashTagSearch from './components/HashTagSearch';
 import TextSearch from './components/TextSearch';
+
 // Import style sheet
 import './App.css';
 
 function App() {
   const [searchBy, setSearchBy] = useState('hashtag');
   const handdleOnChange = (event) => {
-    console.log(event.target.value);
     setSearchBy(event.target.value);
   };
   console.log(searchBy);
