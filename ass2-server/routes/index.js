@@ -4,6 +4,7 @@ const router = express.Router();
 const twitterService = require('../services/twitter');
 const googleTrends = require('../services/google');
 const randomText = require('../services/randomText');
+const { sentiment } = require('../services/sentiment');
 const nlp = require('../services/nlp');
 const redis = require('redis');
 const util = require('util');

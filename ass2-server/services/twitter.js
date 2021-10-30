@@ -7,9 +7,13 @@ const baseURL = 'https://api.twitter.com/1.1';
 
 // Get Twiiter bearer token
 const TOKEN = process.env.TWITTER_BEARER_TOKEN;
+
+// S3 bucket
 const bucketName = 'yenapark-tweet-store';
+
 // This section will change for Cloud Services
 const redisClient = redis.createClient();
+
 const fetchTweet = async (twitterQuery) => {
   const twitterURL = `${baseURL}/search/tweets.json?q=${twitterQuery}&count=100&lang=en&result_type=popular`;
   return new Promise((resolve, reject) => {
@@ -44,7 +48,6 @@ const fetchTweet = async (twitterQuery) => {
 };
 
 const getTweets = async (twitterQuery) => {
-  console.log(twitterQuery);
   const s3Key = `tweet-${twitterQuery}`;
   const redisKey = `tweet:${twitterQuery}`;
   const params = { Bucket: bucketName, Key: s3Key };
@@ -66,7 +69,6 @@ const getTweets = async (twitterQuery) => {
   } else {
     // Check S3
     try {
-      console.log(params, 'param');
       const result = await S3promisified(params);
       const s3Result = JSON.parse(result.Body);
 
