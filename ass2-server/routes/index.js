@@ -48,75 +48,7 @@ router.post('/twitter', async (req, res) => {
   const result = await Promise.all(
     tags.map(async (query) => {
       const { term } = query;
-      const s3Key = `tweet-${term}`;
-      const redisKey = `tweet:${term}`;
-      const params = { Bucket: bucketName, Key: s3Key };
-
-      const serviceObject = new AWS.S3({ apiVersion: '2006-03-01' });
-
-      const S3promisified = util
-        .promisify(serviceObject.getObject)
-        .bind(serviceObject);
-
-      const redisPromisified = util
-        .promisify(redisClient.get)
-        .bind(redisClient);
-
-      // Check Redis cache first
-      const redisResult = await redisPromisified(redisKey);
-      // fetch it from Redis cache
-      if (redisResult) {
-        const resultJSON = JSON.parse(redisResult);
-        return resultJSON;
-      } else {
-        // Check S3
-        try {
-          console.log(params, 'param');
-          const result = await S3promisified(params);
-          const s3Result = JSON.parse(result.Body);
-
-          // Store it in Redis cache
-          redisClient.setex(
-            redisKey,
-            300,
-            JSON.stringify([{ source: 'Redis Cache' }, ...s3Result])
-          );
-          return JSON.parse(result.Body);
-        } catch (err) {
-          try {
-            // fetch from Twitter API
-            const resultJSON = await twitterService.getTweets(term);
-
-            // Store it in Redis cache
-            redisClient.setex(
-              redisKey,
-              300,
-              JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
-            );
-
-            // Store it in S3
-            const body = JSON.stringify([
-              { source: 'S3 bucket' },
-              ...resultJSON,
-            ]);
-            const objectParams = {
-              Bucket: bucketName,
-              Key: s3Key,
-              Body: body,
-            };
-            const uploadPromise = new AWS.S3({ apiVersion: '2006-03-01' })
-              .putObject(objectParams)
-              .promise();
-            uploadPromise.then(function () {
-              console.log(
-                'Successfully uploaded data to ' + bucketName + '/' + s3Key
-              );
-            });
-
-            return [{ source: 'Twitter API' }, ...resultJSON];
-          } catch (error) {}
-        }
-      }
+      return twitterService.getTweets(term);
     })
   );
   res.send(result);
@@ -129,78 +61,9 @@ router.post('/twitter-hashtag', async (req, res) => {
 
   const result = await Promise.all(
     tags.map(async (query) => {
-      const s3Key = `tweet-${query}`;
-      const redisKey = `tweet:${query}`;
-      const params = { Bucket: bucketName, Key: s3Key };
-
-      const serviceObject = new AWS.S3({ apiVersion: '2006-03-01' });
-
-      const S3promisified = util
-        .promisify(serviceObject.getObject)
-        .bind(serviceObject);
-
-      const redisPromisified = util
-        .promisify(redisClient.get)
-        .bind(redisClient);
-
-      // Check Redis cache first
-      const redisResult = await redisPromisified(redisKey);
-      // fetch it from Redis cache
-      if (redisResult) {
-        const resultJSON = JSON.parse(redisResult);
-        return resultJSON;
-      } else {
-        // Check S3
-        try {
-          console.log(params, 'param');
-          const result = await S3promisified(params);
-          const s3Result = JSON.parse(result.Body);
-
-          // Store it in Redis cache
-          redisClient.setex(
-            redisKey,
-            300,
-            JSON.stringify([{ source: 'Redis Cache' }, ...s3Result])
-          );
-          return JSON.parse(result.Body);
-        } catch (err) {
-          try {
-            // fetch from Twitter API
-            const resultJSON = await twitterService.getTweets(query);
-
-            // Store it in Redis cache
-            redisClient.setex(
-              redisKey,
-              300,
-              JSON.stringify([{ source: 'Redis Cache' }, ...resultJSON])
-            );
-
-            // Store it in S3
-            const body = JSON.stringify([
-              { source: 'S3 bucket' },
-              ...resultJSON,
-            ]);
-            const objectParams = {
-              Bucket: bucketName,
-              Key: s3Key,
-              Body: body,
-            };
-            const uploadPromise = new AWS.S3({ apiVersion: '2006-03-01' })
-              .putObject(objectParams)
-              .promise();
-            uploadPromise.then(function () {
-              console.log(
-                'Successfully uploaded data to ' + bucketName + '/' + s3Key
-              );
-            });
-
-            return [{ source: 'Twitter API' }, ...resultJSON];
-          } catch (error) {}
-        }
-      }
+      return twitterService.getTweets(query);
     })
   );
-  console.log(result);
   res.send(result);
 });
 
