@@ -14,7 +14,7 @@ import { fetchTwitter } from '../../services/api';
 import './style.css';
 
 const { TextArea } = Input;
-const SearchArea = (props) => {
+const TextSearch = (props) => {
   const [form] = Form.useForm();
   const [twiteData, setTwiteData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ const SearchArea = (props) => {
 
   return (
     <div>
-      <div className='search-area'>
+      <div className='text-search'>
         <Form
           form={form}
           name='search-form'
@@ -96,4 +96,4 @@ const SearchArea = (props) => {
   );
 };
 
-export default SearchArea;
+export default TextSearch;

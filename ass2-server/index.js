@@ -8,10 +8,6 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
-// const WHITELISTED_ORIGINS = ['http://localhost:3000', 'http://localhost:8081'];// Configure CORS settings
-
-// app.use(cors({ origin: WHITELISTED_ORIGINS, credentials: true }));
-
 // Add body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -5,7 +5,7 @@ const baseURL = 'http://metaphorpsum.com/paragraphs/1/50';
 const getRandomText = async () => {
   let result = [];
 
-  for (i = 0; i < 100; i++) {
+  for (i = 0; i < 30; i++) {
     const res = await axios.get(baseURL);
     result.push(res.data);
   }
