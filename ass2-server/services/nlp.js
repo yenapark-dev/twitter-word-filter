@@ -1,7 +1,7 @@
 const natural = require('natural');
 const TfIdf = natural.TfIdf;
 const fs = require('fs');
-const NUM_TAGS = 5;
+const NUM_TAGS = 8;
 const { getRandomText } = require('./randomText');
 
 const preprocess = async () => {

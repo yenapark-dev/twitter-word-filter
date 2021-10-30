@@ -28,7 +28,6 @@ const TwitteGroup = (props) => {
           <InfiniteScroll
             dataLength={tweetData.length}
             next={tweetData}
-            hasMore={tweetData.length < 30}
             loader={<Skeleton paragraph={{ rows: 1 }} active />}
             endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
             scrollableTarget='scrollableDiv'
